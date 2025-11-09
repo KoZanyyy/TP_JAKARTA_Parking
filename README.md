@@ -64,22 +64,25 @@ Application web de gestion de parking automatisé avec 3 bornes interactives :
 1. **Cloner le projet**
 
 
-git clone URL_REPO
+git clone https://github.com/KoZanyyy/TP_JAKARTA_Parking
 
-cd parking-management
+cd TP_JAKARTA_Parking
+
 
 
 2. **Compiler**
 
 mvn clean package
 
-
 3. **Déployer**
-- Copier le `.war` dans le dossier `deployments/` du serveur Jakarta EE
+    - Utiliser l'IDE (IntelliJ/Eclipse) : Run → Deploy
+    - Ou copier le fichier `.war` (dans `target/`) vers le serveur
+
+
 
 4. **Accéder**
 
-http://localhost:8080/parking/
+http://localhost:8080/parking-bornes/
 
 
 ## 🎮 Utilisation
@@ -91,10 +94,42 @@ http://localhost:8080/parking/
 
 ## 🔧 Choix techniques
 
-- **Tarification** : 0,90€ par tranche de 30 secondes
-- **Temps accéléré** : x10 (15 min réelles = 90 secondes)
-- **Paiements multiples** : Autorisés avec cumul
-- **Prix figé** : Après sortie, plus d'augmentation
+### Interface utilisateur - One-Page Application
+**Choix :** Utilisation d'une interface à onglets (one-page) au lieu de 3 pages séparées  
+**Justification :**
+- Meilleure expérience utilisateur sans rechargement de page
+- Simule mieux le comportement de bornes physiques interactives
+- Navigation plus fluide entre les différentes bornes
+- Design moderne avec Bootstrap 5 (dégradés, responsive)
+
+### Base de données
+**Choix :** H2 en mode embedded avec configuration `drop-and-create`  
+**Justification :**
+- Facilite le développement et les tests (pas besoin d'installer MySQL)
+- Base réinitialisée à chaque démarrage pour des tests propres
+- Portable et autonome (aucune configuration externe nécessaire)
+- Facile à remplacer par MySQL/PostgreSQL en production
+
+### Tarification
+**Choix :** 0,90€ par tranche de 30 secondes 
+**Justification :**
+- Calcul par tranches plus réaliste pour un parking réel
+- Évite les calculs au centime près
+- Facilite les tests avec des montants significatifs
+
+### Paiements multiples
+**Choix :** Autoriser plusieurs paiements partiels avec cumul automatique  
+**Justification :**
+- Plus flexible pour l'utilisateur (peut payer en plusieurs fois)
+- Relation `@OneToMany` entre Ticket et Paiements
+- Correspond aux besoins réels d'un parking
+
+### Gestion des erreurs
+**Choix :** Redirection automatique avec pré-remplissage du formulaire  
+**Justification :**
+- Si sortie impossible (paiement incomplet/délai dépassé) → redirection vers borne de paiement
+- Numéro de ticket pré-rempli pour faciliter l'usage
+- Améliore l'expérience utilisateur
 
 ## 🧪 Tests effectués
 
@@ -109,12 +144,11 @@ http://localhost:8080/parking/
 
 ## 📈 Améliorations possibles
 
-- Dashboard admin
-- Export CSV
-- Tests unitaires
-- API REST
+- Base de données permanente (qui ne se réinitialise pas au relancement de l'app)
+- Amélioration de la gestion d'erreur.
 
 ---
 
-**Contact** : [votre.email@example.com]  
+**GitHub** : KoZanyyy
+**Discord** : kozany667
 *Projet académique JEE - 2025*
